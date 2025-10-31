@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 def mostrar_menu():
 
@@ -72,20 +73,127 @@ def crear_directorio():
 
 
 def crear_archivo():
-    # Crea un archivo de texto y permite escribir en él
-    pass
+    print(f"\nRuta actual: {os.getcwd()}")
+    nombre_archivo = input("Introduce el nombre que deseas poner al archivo nuevo: ").strip()
+
+    if not nombre_archivo:
+        print("El nombre del archivo no puede estar vacío.")
+        return
+
+    try:
+        with open(nombre_archivo, 'x') as file:
+            anadir_texto_inicial = input("¿Deseas añadir texto inicial? (si/no): ").strip().lower()
+
+            if anadir_texto_inicial == "si":
+                texto_inicial = input("Escribe el texto que quieras añadir al archivo: ")
+                file.write(texto_inicial)
+                print(f"Se ha guardado el texto en {nombre_archivo} correctamente.")
+            elif anadir_texto_inicial == "no":
+                print(f"Has creado el archivo {nombre_archivo} vacío correctamente.")
+            else:
+                print(f"Opción no válida. Se ha creado el archivo {nombre_archivo} vacío.")
+    except FileExistsError:
+        print(f"Ya existe un archivo llamado '{nombre_archivo}'.")
+    except Exception as e:
+        print(f"Error al crear el archivo {nombre_archivo}: {e}")
+
+
+
 
 def escribir_en_archivo():
-    # Abre un archivo existente y añade texto al final
-    pass
+    # Muestra la ruta actual del directorio
+    print(f"\nRuta actual: {os.getcwd()}")
+
+    archivo_anadir_texto = input("Introduce el nombre del archivo que quieres añadir texto: ")
+
+    if not archivo_anadir_texto:
+        print("El nombre no puede estar vacío.")
+        return
+
+    try:
+        with open(archivo_anadir_texto, 'a') as file:
+            texto_a_anadir = input("Escribe el texto que deseas añadir al archivo: ")
+
+            if not texto_a_anadir.strip():
+                print("No se ha añadido ningún texto porque estaba vacío.")
+                return
+            file.write("\n" + texto_a_anadir)
+            print(f"Texto añadido correctamente a {archivo_anadir_texto}")
+    except FileNotFoundError:
+        print(f"El archivo {archivo_anadir_texto} no se ha encontrado en el directorio.")
+    except Exception as e:
+        print(f"Error al escribir en el archivo {archivo_anadir_texto}: {e}")
 
 def eliminar_elemento():
-    # Elimina un archivo o carpeta
-    pass
+    # Muestra la ruta actual
+    print(f"\nRuta actual: {os.getcwd()}")
+
+    nombre_elemento_borrar = input("Escribe el nombre del elemento que deseas eliminar: ").strip()
+
+    if not nombre_elemento_borrar:
+        print("El nombre del elemento a eliminar no puede estar vacío.")
+        return
+
+    try:
+        if os.path.exists(nombre_elemento_borrar):
+            if os.path.isfile(nombre_elemento_borrar):
+                os.remove(nombre_elemento_borrar)
+                print(f"Has eliminado el archivo {nombre_elemento_borrar} correctamente.")
+            elif os.path.isdir(nombre_elemento_borrar):
+                os.rmdir(nombre_elemento_borrar)
+                print(f"Has eliminado el directorio {nombre_elemento_borrar} correctamente.")
+            else:
+                print(f"El elemento {nombre_elemento_borrar} no existe en el directorio actual.")
+    except PermissionError:
+        print(f"No tienes los suficientes permisos para eliminar {nombre_elemento_borrar}.")
+    except FileNotFoundError:
+        print(f"El archivo {nombre_elemento_borrar} no existe en el directorio.")
+    except IsADirectoryError:
+        print(f"El directorio {nombre_elemento_borrar} no existe.")
+    except OSError:
+        print(f"El directorio {nombre_elemento_borrar} debe estar vacío para eliminarse")
 
 def mostrar_informacion():
-    # Muestra tamaño y fecha de modificación
-    pass
+    # Muestra la ruta actual del directorio
+    print(f"\nRuta actual: {os.getcwd()}")
+
+    nombre_elemento_informacion = input("Introduce el nombre del elemento para mostar su información: ").strip()
+
+    if not nombre_elemento_informacion:
+        print("El nombre no puede estar vacío.")
+        return
+
+    try:
+        if os.path.exists(nombre_elemento_informacion):
+            fecha_modificacion = datetime.fromtimestamp(os.path.getmtime(nombre_elemento_informacion))
+            print(f"\n=== Información de '{nombre_elemento_informacion}' ===")
+
+            if os.path.isfile(nombre_elemento_informacion):
+                print(f"Tamaño de {nombre_elemento_informacion}: {os.path.getsize(nombre_elemento_informacion)} bytes")
+                print(f"Fecha de modificación de {nombre_elemento_informacion}: {fecha_modificacion}")
+            elif os.path.isdir(nombre_elemento_informacion):
+                tam = calcular_tamanio_directorio(nombre_elemento_informacion)
+                print(f"Tamaño del directorio: {tam} bytes.")
+                print(f"Fecha de modificación de {nombre_elemento_informacion}: {fecha_modificacion}")
+            else:
+                return
+        else:
+            print("El elemento no existe en el directorio actual.")
+    except Exception as e:
+        print(e)
+
+
+def calcular_tamanio_directorio(ruta_dir):
+    total_bytes = 0
+    for raiz, subdirs, archivos in os.walk(ruta_dir):
+        for nombre in archivos:
+            ruta_archivos = os.path.join(raiz, nombre)
+            try:
+                total_bytes += os.path.getsize(ruta_archivos)
+            except Exception:
+                pass
+    return total_bytes
+
 
 def main():
 

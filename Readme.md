@@ -49,5 +49,7 @@ def crear_directorio():        # Crea una nueva carpeta
 def crear_archivo():           # Crea un archivo de texto y permite escribir contenido inicial
 def escribir_en_archivo():     # Añade texto a un archivo existente
 def eliminar_elemento():       # Elimina un archivo o carpeta
+def calcular_tamanio_directorio(ruta_dir):  # Calcula tamaño total recursivo de un directorio (en bytes)
 def mostrar_informacion():     # Muestra tamaño y fecha de modificación
 def main():                    # Bucle principal del programa
+
